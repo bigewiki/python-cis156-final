@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 
 class ItemBase(BaseModel):
-    title: str
+    name: str
     description: Optional[str] = None
 
 

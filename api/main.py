@@ -46,8 +46,13 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 def create_item_for_user(
     user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)
 ):
-    return crud.create_user_item(db=db, item=item, user_id=user_id)
-
+    # custom exception handling if the user input bad params
+    try:
+        # try to create the item
+        return crud.create_user_item(db=db, item=item, user_id=user_id)
+    except TypeError as e:
+        # catch the TypeError, return 406 Not Acceptable with exception details
+        raise HTTPException(status_code=406, detail=str(e))
 
 @app.get("/items/", response_model=List[schemas.Item])
 def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
